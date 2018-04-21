@@ -23,32 +23,56 @@ $db    = Db::instance('zhihu');
 
 //获取详情页
 $url  = 'http://www.365yg.com/api/pc/feed/?category=video&utm_source=toutiao&widen=1&max_behot_time=0&max_behot_time_tmp=' . time();
-$body = strip_tags(getUtlHtml($url));
-$list = json_decode($body, true);
 
-if (true === empty($list))
-{
+$curl = new \Curl\Curl();
+// $curl->setUserAgent('MyUserAgent/0.0.1 (+https://www.example.com/bot.html)');
+// $curl->setReferrer('https://www.example.com/url?url=https%3A%2F%2Fwww.example.com%2F');
+// $curl->setHeader('X-Requested-With', 'XMLHttpRequest');
+// $curl->setCookie('key', 'value');
+
+
+$curl->setHeader('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8');
+$curl->setHeader('Accept-Language', 'zh-CN,zh;q=0.9,en;q=0.8,zh-TW;q=0.7');
+$curl->setHeader('Connection', 'keep-alive');
+$curl->setHeader('Host', 'www.365yg.com');
+$curl->setHeader('Upgrade-Insecure-Requests', '1');
+$curl->setHeader('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36');
+$curl->get($url);
+$body = '';
+if ($curl->error) {
     die('没有返回列表数据');
+} else {
+    $body = $curl->response;
 }
+// die('1111');
+// $body = file_get_contents($url);
+// file_put_contents('123.php',$body);
+// var_dump($body);
+// $list = json_decode($body, true);
+// var_dump($list);die;
+// if (true === empty($list))
+// {
+//     die('没有返回列表数据');
+// }
 
-foreach ($list['data'] as $key => $value)
+foreach ($body->data as $key => $value)
 {
-    $res = $db->count($table, ['group_id' => $value['group_id']]);
+    $res = $db->count($table, ['video_id' => trim($value->video_id)]);
     if (!$res)
     {
         $db->insert($table, [
-                'group_id'           => $value['group_id'],
-                'video_id'           => $value['video_id'],
-                'tag'                => $value['tag'],
-                'chinese_tag'        => $value['chinese_tag'],
-                'comments_count'     => $value['comments_count'] ?? 0,
-                'video_play_count'   => $value['video_play_count'],
-                'video_duration_str' => $value['video_duration_str'],
-                'title'              => $value['title'],
-                'abstract'           => $value['abstract'],
-                'middle_image'       => $value['middle_image'],
-                'image_url'          => $value['image_url'],
-                'source_url'         => $value['source_url'],
+                'group_id'           => trim($value->group_id),
+                'video_id'           => trim($value->video_id),
+                'tag'                => trim($value->tag),
+                'chinese_tag'        => trim($value->chinese_tag),
+                'comments_count'     => $value->comments_count ?? 0,
+                'video_play_count'   => trim($value->video_play_count),
+                'video_duration_str' => trim($value->video_duration_str),
+                'title'              => trim($value->title),
+                'abstract'           => trim($value->abstract),
+                'middle_image'       => trim($value->middle_image),
+                'image_url'          => trim($value->image_url),
+                'source_url'         => trim($value->source_url),
                 'created_at'         => date('Y-m-d H:i:s', time()),
             ]
         );

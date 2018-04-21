@@ -24,7 +24,7 @@
 
 <script type="text/html" id="barDemo">
     <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">下载</a>
-    <!--<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>-->
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="info">查看</a>
 </script>
 
 
@@ -60,21 +60,21 @@
             ,page: true //开启分页
 //            ,cellMinWidth: 20
             ,cols: [[ //表头
-                {width:50,field: 'id', title: 'ID',  sort: true, fixed: 'left'}
-                ,{width:130,field: 'middle_image', title: '图片', templet:'<div><img src="{{ d.middle_image}}" style:"height:150px;"></div>'}
+                {width:80,field: 'id', title: 'ID',  sort: true, fixed: 'left'}
+                ,{width:130,field: 'image_url', title: '图片', templet:'<div><img src="{{ d.middle_image}}" style:"height:150px;"></div>'}
                 ,{width:180,field: 'group_id', title: '详情id'}
 //                ,{field: 'video_id', title: '视频id'}
-                ,{width:80,field: 'status', title: '状态',  sort: true}
+                ,{field: 'title', title: '名称'}
+//                ,{width:80,field: 'status', title: '状态',  sort: true}
 //                ,{field: 'tag', title: '标签'}
                 ,{width:80,field: 'chinese_tag', title: '标签名称'}
 //                ,{field: 'comments_count', title: '评论数', sort: true}
                 ,{width:80,field: 'video_play_count', title: '播放量',  sort: true}
                 ,{width:80,field: 'video_duration_str', title: '播放时长'}
-                ,{width:230,field: 'source_url', title: '详情地址'}
-                ,{field: 'title', title: '名称'}
+//                ,{width:230,field: 'source_url', title: '详情地址'}
                 ,{width:80,field: 'abstract', title: '描述'}
                 ,{width:180,field: 'created_at', title: '采集时间'}
-                ,{width:80,fixed: 'right', align:'center', toolbar: '#barDemo', title: '操作'}
+                ,{width:120,fixed: 'right', align:'center', toolbar: '#barDemo', title: '操作'}
             ]]
         });
 
@@ -88,6 +88,9 @@
                     layer.msg(response.data.msg);
 //                    console.log(response);
                 })
+
+            } else if(layEvent === 'info'){
+                window.open("http://www.365yg.com"+data.source_url);
 
             } else if(layEvent === 'del'){
                 layer.confirm('真的删除行么', function(index){

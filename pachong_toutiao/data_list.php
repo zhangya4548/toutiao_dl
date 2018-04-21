@@ -50,7 +50,7 @@ $data = $db->select($table, ['id',
     'source_url' ,
     'created_at' ,
 ], [
-    "ORDER" => ['video_play_count' => 'DESC','status' => 'ASC',],
+    "ORDER" => ['created_at' => 'DESC','video_play_count' => 'DESC'],
     "LIMIT" => [$page, $limit],
     'status'=>0
     ], [

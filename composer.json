@@ -15,5 +15,11 @@
         "post-update-cmd": [
             "PhantomInstaller\\Installer::installPhantomJS"
         ]
+    },
+    "repositories": {
+        "packagist": {
+            "type": "composer",
+            "url": "https://packagist.phpcomposer.com"
+        }
     }
 }

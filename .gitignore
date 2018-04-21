@@ -1,4 +1,7 @@
+/phantomjs
+/bin
 /vendor
+/pachong_toutiao/*.mp4
 /.idea
 Homestead.json
 Homestead.yaml

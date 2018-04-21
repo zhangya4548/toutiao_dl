@@ -39,6 +39,7 @@ $resUrl = $db->select($table, 'source_url', [
     'id' => $id,
     'status' => 0,
 ]);
+
 if(true === empty($resUrl[0])){
     exit(json_encode(['code' =>1, 'msg' =>'没有待下载的视频videoId']));
 }
@@ -46,7 +47,29 @@ $resUrl = $resUrl[0];
 
 //获取详情页
 $url = 'http://www.365yg.com'.$resUrl;
-$body = getUtlHtml($url);
+// $body = getUtlHtml($url);
+
+$curl = new \Curl\Curl();
+// $curl->setUserAgent('MyUserAgent/0.0.1 (+https://www.example.com/bot.html)');
+// $curl->setReferrer('https://www.example.com/url?url=https%3A%2F%2Fwww.example.com%2F');
+// $curl->setHeader('X-Requested-With', 'XMLHttpRequest');
+// $curl->setCookie('key', 'value');
+
+
+$curl->setHeader('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8');
+$curl->setHeader('Accept-Language', 'zh-CN,zh;q=0.9,en;q=0.8,zh-TW;q=0.7');
+$curl->setHeader('Connection', 'keep-alive');
+$curl->setHeader('Host', 'www.365yg.com');
+$curl->setHeader('Upgrade-Insecure-Requests', '1');
+$curl->setHeader('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36');
+$curl->get($url);
+$body = '';
+if ($curl->error) {
+    exit(json_encode(['code' =>1, 'msg' =>'没有返回HTML数据']));
+} else {
+    $body = $curl->response;
+}
+
 if($body){
 
     //1打开http://toutiao.com/a6309254755004875010/，查看网页源代码获取videoid = 0425d8f0c2bb425d9361c0eb2eeb4f16
